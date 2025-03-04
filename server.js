@@ -57,13 +57,7 @@ app.use(
   })
 );
 
-// Global middleware to ensure CORS headers are always sent
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
+
 
 // ================== Middleware ==================
 app.use(express.json()); // Parse JSON bodies
