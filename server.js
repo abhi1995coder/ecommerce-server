@@ -37,6 +37,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://ecommerce-server-8uzk.onrender.com",
   "https://indiangoods.co.in",
+  "https://www.indiangoods.co.in"
 ];
 
 app.use(
