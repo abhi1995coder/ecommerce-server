@@ -57,11 +57,7 @@ app.use(
   })
 );
 
-// ✅ Ensure CORS headers are applied globally
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
+
 
 // ================== Middleware ==================
 app.use(express.json()); // Parse JSON bodies
