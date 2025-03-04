@@ -6,10 +6,10 @@ dotenv.config({ path: "./details.env" });
 
 // Create a connection pool
 const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    host:'208.109.201.70',
+    user:'AbhishekChaturvedi' ,
+    password: 'up32dm2201up32ag5712',
+    database: 'ecommerce',
     waitForConnections: true, // Wait for a connection if none are available
     connectionLimit: 10, // Maximum number of connections in the pool
     queueLimit: 0, // Unlimited queueing for connection requests
