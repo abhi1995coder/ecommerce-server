@@ -30,6 +30,7 @@ const PORT = process.env.PORT || 3306; // Use environment variable for port
 const allowedOrigins = [
   "http://127.0.0.1:5500",
   "http://localhost:3000",
+  "https://ecommerce-server-8uzk.onrender.com",
   // Add other allowed origins here
 ];
 
