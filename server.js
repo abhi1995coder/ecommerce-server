@@ -33,9 +33,17 @@ const limiter = rateLimit({
 app.use(limiter); // Apply rate limiting
 
 // ================== CORS Configuration ==================
+const allowedOrigins = ["https://indiangoods.co.in", "https://www.indiangoods.co.in"];
+
 app.use(
   cors({
-    origin: "https://indiangoods.co.in", // Allow only your frontend
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
