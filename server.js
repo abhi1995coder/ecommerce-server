@@ -4,35 +4,39 @@ const helmet = require("helmet"); // For setting secure HTTP headers
 const rateLimit = require("express-rate-limit"); // For rate limiting
 const morgan = require("morgan"); // For request logging
 const dotenv = require("dotenv");
-
-
 const fs = require("fs");
 const path = require("path");
-const app = express();
 
+dotenv.config(); // Load environment variables
+
+const app = express();
+const PORT = process.env.PORT || 3306; // Use environment variable for port
+
+// ================== Logging ==================
 // Create a write stream for logging HTTP requests
 const accessLogStream = fs.createWriteStream(
   path.join(__dirname, "access.log"),
   { flags: "a" } // Append to the file
 );
+app.use(morgan("combined", { stream: accessLogStream })); // Log to file
+app.use(morgan("dev")); // Log to console
 
-// Log HTTP requests to a file
-app.use(morgan("combined", { stream: accessLogStream }));
+// ================== Security & Performance ==================
+app.use(helmet()); // Set secure HTTP headers
 
-// Load environment variables
-dotenv.config();
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: "Too many requests, please try again later.",
+});
+app.use(limiter); // Apply rate limiting
 
-
-const PORT = process.env.PORT || 3306; // Use environment variable for port
-
-// ================== Middleware ==================
-// Enable CORS for specific origins
+// ================== CORS Configuration ==================
 const allowedOrigins = [
   "http://127.0.0.1:5500",
   "http://localhost:3000",
   "https://ecommerce-server-8uzk.onrender.com",
   "https://indiangoods.co.in",
-  // Add other allowed origins here
 ];
 
 app.use(
@@ -41,39 +45,33 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.error("Blocked by CORS:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, // Allow cookies and credential
-    methods: "GET,POST,PUT,DELETE,OPTIONS",
-    allowedHeaders: "Content-Type,Authorization",
+    credentials: true, // Allow cookies and credentials
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// Set secure HTTP headers
-app.use(helmet());
-
-// Rate limiting to prevent brute-force attacks
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: "Too many requests, please try again later.",
+// Global middleware to ensure CORS headers are always sent
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
 });
-app.use(limiter);
 
-// Log HTTP requests
-app.use(morgan("dev"));
-
-// Parse JSON bodies
-app.use(express.json());
+// ================== Middleware ==================
+app.use(express.json()); // Parse JSON bodies
 
 // ================== Routes ==================
-// Import Routes
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
 const razorpayRoutes = require("./routes/razorpayRoutes");
-const orderRoutes=require("./routes/orderRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 
 // Use Routes
@@ -81,7 +79,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/payments", razorpayRoutes);
-app.use("/api/order",orderRoutes);
+app.use("/api/order", orderRoutes);
 app.use("/api/search", searchRoutes);
 
 // ================== Error Handling ==================
@@ -98,5 +96,5 @@ app.use((err, req, res, next) => {
 
 // ================== Start Server ==================
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running`);
 });
