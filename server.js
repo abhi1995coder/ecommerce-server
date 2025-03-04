@@ -51,13 +51,17 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, // Allow cookies and credentials
+    credentials: true, // ✅ Allow cookies and credentials
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-
+// ✅ Ensure CORS headers are applied globally
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 // ================== Middleware ==================
 app.use(express.json()); // Parse JSON bodies
@@ -92,5 +96,5 @@ app.use((err, req, res, next) => {
 
 // ================== Start Server ==================
 app.listen(PORT, () => {
-  console.log(`🚀 Server running`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
