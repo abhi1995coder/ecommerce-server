@@ -34,8 +34,7 @@ app.use(limiter); // Apply rate limiting
 
 // ================== CORS Configuration ==================
 const allowedOrigins = [
-  "http://127.0.0.1:5500",
-  "http://localhost:3000",
+ 
   "https://ecommerce-server-8uzk.onrender.com",
   "https://indiangoods.co.in",
   "https://www.indiangoods.co.in"
