@@ -41,7 +41,10 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
+console.log("CORS configured for origin: https://indiangoods.co.in");
+app.get("/api/test-cors", (req, res) => {
+  res.json({ message: "CORS is working!" });
+});
 
 // ================== Middleware ==================
 app.use(express.json()); // Parse JSON bodies
