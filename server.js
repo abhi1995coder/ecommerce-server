@@ -23,7 +23,7 @@ app.use(morgan("combined", { stream: accessLogStream }));
 dotenv.config();
 
 
-const PORT = process.env.PORT || 3000; // Use environment variable for port
+const PORT = process.env.PORT || 3306; // Use environment variable for port
 
 // ================== Middleware ==================
 // Enable CORS for specific origins
