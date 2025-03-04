@@ -33,30 +33,14 @@ const limiter = rateLimit({
 app.use(limiter); // Apply rate limiting
 
 // ================== CORS Configuration ==================
-const allowedOrigins = [
- 
-  "https://ecommerce-server-8uzk.onrender.com",
-  "https://indiangoods.co.in",
-  "https://www.indiangoods.co.in"
-];
-
 app.use(
   cors({
-    origin: (origin, callback) => {
-         console.log("Incoming Origin:", origin); // Log the origin
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.error("Blocked by CORS:", origin);
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // ✅ Allow cookies and credentials
+    origin: "https://indiangoods.co.in", // Allow only your frontend
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
 
 
 // ================== Middleware ==================
