@@ -31,6 +31,7 @@ const allowedOrigins = [
   "http://127.0.0.1:5500",
   "http://localhost:3000",
   "https://ecommerce-server-8uzk.onrender.com",
+  "https://indiangoods.co.in",
   // Add other allowed origins here
 ];
 
