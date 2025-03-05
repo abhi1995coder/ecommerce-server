@@ -170,7 +170,7 @@ router.post("/signup", limiter, asyncHandler(async (req, res) => {
             [name, email, hashedPassword, false, verificationToken, expirationTime]
         );
 
-        const verificationLink = `http://localhost:3000/api/auth/verify-email?token=${verificationToken}`;
+        const verificationLink = `https://ecommerce-server-8uzk.onrender.com/api/auth/verify-email?token=${verificationToken}`;
         await sendVerificationEmail(email, verificationLink);
 
         res.status(201).json({ message: "Verification email sent! Please verify your email." });
@@ -188,14 +188,14 @@ router.get("/verify-email", asyncHandler(async (req, res) => {
         const [user] = await db.query("SELECT * FROM users WHERE verification_token = ?", [token]);
 
         if (user.length === 0) {
-            return res.redirect("http://localhost:3000/?token=invalid");
+            return res.redirect("https://indiangoods.co.in/?token=invalid");
         }
 
         const userData = user[0];
 
         // Check if the token has expired
         if (new Date(userData.verification_expires) < new Date()) {
-            return res.redirect("http://localhost:3000/?token=expired");
+            return res.redirect("https://indiangoods.co.in/?token=expired");
         }
 
         // Mark user as verified and remove verification token
