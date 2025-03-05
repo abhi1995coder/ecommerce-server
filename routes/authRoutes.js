@@ -139,7 +139,7 @@ async function sendVerificationEmail(email, verificationLink) {
 
 // Apply security middleware
 router.use(helmet());
-router.use(cors({ origin: "http://127.0.0.1:5500" })); // Allow requests from your frontend origin
+router.use(cors({ origin: "https://indiangoods.co.in" })); // Allow requests from your frontend origin
 
 // User Registration with Email Verification
 router.post("/signup", limiter, asyncHandler(async (req, res) => {
@@ -201,10 +201,10 @@ router.get("/verify-email", asyncHandler(async (req, res) => {
         // Mark user as verified and remove verification token
         await db.query("UPDATE users SET verified = ?, verification_token = NULL, verification_expires = NULL WHERE email = ?", [true, userData.email]);
 
-        res.redirect("http://localhost:3000/?token=success");
+        res.redirect("https://indiangoods.co.in/?token=success");
     } catch (err) {
         logger.error("Error during email verification:", err);
-        res.redirect("http://localhost:3000/?token=error");
+        res.redirect("https://indiangoods.co.in/?token=error");
     }
 }));
 
