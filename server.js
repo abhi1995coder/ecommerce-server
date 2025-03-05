@@ -38,6 +38,7 @@ const allowedOrigins = ["https://indiangoods.co.in", "https://www.indiangoods.co
 app.use(
   cors({
     origin: (origin, callback) => {
+        console.log("Incoming Origin:", origin); // Log the origin
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -49,7 +50,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-console.log("CORS configured for origin: https://indiangoods.co.in");
+
 app.get("/api/test-cors", (req, res) => {
   res.json({ message: "CORS is working!" });
 });
