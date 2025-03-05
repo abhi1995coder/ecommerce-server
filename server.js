@@ -40,8 +40,10 @@ app.use(
     origin: (origin, callback) => {
         console.log("Incoming Origin:", origin); // Log the origin
       if (!origin || allowedOrigins.includes(origin)) {
+         console.log("Origin allowed:", origin);
         callback(null, true);
       } else {
+         console.log("Origin allowed:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
