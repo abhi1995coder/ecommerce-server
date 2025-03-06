@@ -8,7 +8,7 @@ const dotenv = require("dotenv");
 const { cleanEnv, str } = require("envalid");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
-const cors = require("cors");
+
 const winston = require("winston");
 
 const router = express.Router();
@@ -139,7 +139,7 @@ async function sendVerificationEmail(email, verificationLink) {
 
 // Apply security middleware
 router.use(helmet());
-router.use(cors({ origin: "https://indiangoods.co.in" })); // Allow requests from your frontend origin
+
 
 // User Registration with Email Verification
 router.post("/signup", limiter, asyncHandler(async (req, res) => {
