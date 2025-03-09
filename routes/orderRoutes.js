@@ -15,6 +15,12 @@ const env = cleanEnv(process.env, {
 
 });
 
+// Increase the payload size limit for JSON requests (e.g., 50MB)
+router.use(express.json({ limit: '50mb' }));
+
+// Increase the payload size limit for URL-encoded requests (e.g., 50MB)
+router.use(express.urlencoded({ limit: '50mb', extended: true }));
+
 
 router.post('/', async (req, res) => {
 
