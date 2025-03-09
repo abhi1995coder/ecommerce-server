@@ -19,7 +19,7 @@ const env = cleanEnv(process.env, {
 router.post('/', async (req, res) => {
 
 
-    const { order_id, id, total_amount, shipping_address, payment_method, items } = req.body;
+    const { order_id, id, total_amount, shipping_address, payment_method, items, phone } = req.body;
 
     // Get a connection from the pool
     const connection = await db.getConnection();
@@ -42,8 +42,8 @@ router.post('/', async (req, res) => {
 
         // Insert into orders table
         await connection.query(
-            `INSERT INTO orders (order_id, id, total_amount, shipping_address, payment_method) VALUES (?, ?, ?, ?, ?)`,
-            [order_id, id, total_amount, shipping_address, payment_method]
+            `INSERT INTO orders (order_id, id, total_amount, shipping_address, payment_method) VALUES (?, ?, ?, ?, ?, ?)`,
+            [order_id, id, total_amount, shipping_address, payment_method, phone]
         );
 
         console.log("Order inserted successfully. Order ID:", order_id);
@@ -51,8 +51,8 @@ router.post('/', async (req, res) => {
         // Insert into order_items table
         for (const item of items) {
             await connection.query(
-                `INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)`,
-                [order_id, item.product_id, item.quantity, item.price]
+                `INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?, ?)`,
+                [order_id, item.product_id, item.quantity, item.price, item.product_name]
             );
         }
 
