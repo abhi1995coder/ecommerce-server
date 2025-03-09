@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
 
         // Insert into orders table
         await connection.query(
-            `INSERT INTO orders (order_id, id, total_amount, shipping_address, payment_method) VALUES (?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO orders (order_id, id, total_amount, shipping_address, payment_method, phone) VALUES (?, ?, ?, ?, ?, ?)`,
             [order_id, id, total_amount, shipping_address, payment_method, phone]
         );
 
@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
         // Insert into order_items table
         for (const item of items) {
             await connection.query(
-                `INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?, ?)`,
+                `INSERT INTO order_items (order_id, product_id, quantity, price, product_name) VALUES (?, ?, ?, ?, ?)`,
                 [order_id, item.product_id, item.quantity, item.price, item.product_name]
             );
         }
