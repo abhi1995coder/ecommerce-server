@@ -77,8 +77,8 @@ const emailConfig = {
     port: 465, // SSL port
     secure: true, // true for 465, false for other ports
     auth: {
-        user: env.EMAIL_USER, // your GoDaddy email
-        pass: env.EMAIL_PASS // your GoDaddy email password
+        user: process.env.EMAIL_USER, // your GoDaddy email
+        pass: process.env.EMAIL_PASS // your GoDaddy email password
     }
 };
 
