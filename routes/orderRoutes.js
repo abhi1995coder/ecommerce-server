@@ -3,17 +3,10 @@ const router = express.Router();
 const db = require('../config/db');
 const { jsPDF } = require('jspdf'); // For generating PDF invoices
 const nodemailer = require('nodemailer'); // For sending emails
-const dotenv = require("dotenv");
-const { cleanEnv, str } = require("envalid");
-dotenv.config({ path: "../details.env" });
 
-// Validate environment variables
-const env = cleanEnv(process.env, {
 
-    EMAIL_USER: str(),
-    EMAIL_PASS: str(),
 
-});
+
 
 // Increase the payload size limit for JSON requests (e.g., 50MB)
 router.use(express.json({ limit: '50mb' }));
