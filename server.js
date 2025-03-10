@@ -3,14 +3,14 @@ const cors = require("cors");
 const helmet = require("helmet"); // For setting secure HTTP headers
 const rateLimit = require("express-rate-limit"); // For rate limiting
 const morgan = require("morgan"); // For request logging
-const dotenv = require("dotenv");
+
 const fs = require("fs");
 const path = require("path");
 
-dotenv.config(); // Load environment variables
+
 
 const app = express();
-const PORT = process.env.PORT; // Use environment variable for port
+const PORT = process.env.PORT; 
 app.set("trust proxy", 1); // ✅ Trust the first proxy
 
 // ================== Logging ==================
