@@ -17,8 +17,8 @@ const router = express.Router();
 
 
 
-const SECRET_KEY = env.JWT_SECRET;
-const TOKEN_EXPIRY = env.TOKEN_EXPIRY;
+const SECRET_KEY = process.env.JWT_SECRET;
+const TOKEN_EXPIRY = process.env.TOKEN_EXPIRY;
 
 // Logger setup
 const logger = winston.createLogger({
