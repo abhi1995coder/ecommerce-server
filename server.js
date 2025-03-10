@@ -10,7 +10,7 @@ const path = require("path");
 dotenv.config(); // Load environment variables
 
 const app = express();
-const PORT = process.env.PORT || 3306; // Use environment variable for port
+const PORT = process.env.PORT; // Use environment variable for port
 app.set("trust proxy", 1); // ✅ Trust the first proxy
 
 // ================== Logging ==================
