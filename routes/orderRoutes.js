@@ -192,5 +192,52 @@ router.post('/send-invoice', async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 });
+router.get('/order-history/:id', async (req, res) => {
+   
+    const userId = req.params.id;
+
+    try {
+        // Query to get orders by user ID
+        const [orders] = await db.query(
+            'SELECT * FROM orders WHERE id = ?',
+            [userId]
+        );
+
+        // If no orders found, return an empty array
+        if (orders.length === 0) {
+            return res.json([]);
+        }
+
+        // Array to store the final response
+        const orderHistory = [];
+
+        // Loop through each order to get related order items
+        for (const order of orders) {
+            const [orderItems] = await db.query(
+                'SELECT * FROM order_items WHERE order_id = ?',
+                [order.order_id]
+            );
+
+            // Add order and its items to the response
+            orderHistory.push({
+                order_id: order.order_id,
+                order_date: order.order_date,
+                total_amount: order.total_amount,
+                shipping_address: order.shipping_address,
+                payment_method: order.payment_method,
+                order_status: order.order_status,
+                phone: order.phone,
+                items: orderItems
+            });
+        }
+
+        // Send the response
+        res.json(orderHistory);
+    } catch (error) {
+        console.error('Error fetching order history:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 
 module.exports = router;
