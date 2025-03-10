@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const db = require("../config/db"); // Updated db.js with connection pool
 const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
+
 const { cleanEnv, str } = require("envalid");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
@@ -13,16 +13,9 @@ const winston = require("winston");
 
 const router = express.Router();
 
-// Load environment variables
-dotenv.config({ path: "../details.env" });
 
-// Validate environment variables
-const env = cleanEnv(process.env, {
-    JWT_SECRET: str(),
-    EMAIL_USER: str(),
-    EMAIL_PASS: str(),
-    TOKEN_EXPIRY: str({ default: "7d" }),
-});
+
+
 
 const SECRET_KEY = env.JWT_SECRET;
 const TOKEN_EXPIRY = env.TOKEN_EXPIRY;
