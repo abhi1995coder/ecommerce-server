@@ -1,8 +1,8 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db");
-const dotenv = require("dotenv");
-dotenv.config({ path: "../details.env" });
+
+
 
 const router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET;
