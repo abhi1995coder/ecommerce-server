@@ -8,7 +8,7 @@ router.get("/find", async (req, res) => {
 
     // Input validation
     if (!productName || productName.trim() === '') {
-        console.log("Invalid product name provided"); // Debugging log
+        
         return res.status(400).json({ error: "Invalid product name" });
     }
 
@@ -26,7 +26,7 @@ router.get("/find", async (req, res) => {
             res.status(404).json({ error: "No products found" });
         }
     } catch (err) {
-        console.error("Database error:", err); // Debugging log
+        
         res.status(500).json({ error: "Database error" });
     }
 });
