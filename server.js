@@ -3,15 +3,12 @@ const cors = require("cors");
 const helmet = require("helmet"); // For setting secure HTTP headers
 const rateLimit = require("express-rate-limit"); // For rate limiting
 const morgan = require("morgan"); // For request logging
-
 const fs = require("fs");
 const path = require("path");
 
-
-
 const app = express();
 const PORT = process.env.PORT; 
-app.set("trust proxy", 1); // ✅ Trust the first proxy
+app.set("trust proxy", 1); //Trust the first proxy
 
 // ================== Logging ==================
 // Create a write stream for logging HTTP requests
@@ -90,5 +87,5 @@ app.use((err, req, res, next) => {
 
 // ================== Start Server ==================
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
