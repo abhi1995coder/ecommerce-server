@@ -1,9 +1,5 @@
 const mysql = require("mysql2");
 
-
-// Load environment variables
-console.log(process.env.DB_HOST);
-
 // Create a connection pool
 const pool = mysql.createPool({
     
@@ -22,7 +18,7 @@ const db = pool.promise();
 // Test the connection
 db.getConnection()
     .then((connection) => {
-        console.log("✅ Connected to MySQL Database!");
+        console.log("Connected to MySQL Database!");
         connection.release(); // Release the connection back to the pool
     })
     .catch((err) => {
