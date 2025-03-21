@@ -4,10 +4,6 @@ const db = require('../config/db');
 const { jsPDF } = require('jspdf'); // For generating PDF invoices
 const nodemailer = require('nodemailer'); // For sending emails
 
-
-
-
-
 // Increase the payload size limit for JSON requests (e.g., 50MB)
 router.use(express.json({ limit: '50mb' }));
 
@@ -152,6 +148,74 @@ const emailtemplate=`<!DOCTYPE html>
 </body>
 </html>`;
 
+// Email template for order cancellation
+const cancellationEmailTemplate = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Cancellation Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #004a8e;
+            margin-bottom: 20px;
+        }
+        .content {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .footer {
+            font-size: 14px;
+            color: #777;
+            margin-top: 20px;
+        }
+        a {
+            color: #004a8e;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            Order Cancellation Confirmation
+        </div>
+        <div class="content">
+            <p>Dear Customer,</p>
+            <p>Your order with ID <strong>{{orderId}}</strong> has been successfully cancelled.</p>
+            <p>If you have any questions or need further assistance, please feel free to contact us.</p>
+        </div>
+        <div class="footer">
+            <p>Best regards,</p>
+            <p>Reach us at: contact@indiangoods.co.in<p><br>
+            <a href="indiangoods.co.in">[indiangoods.co.in]</a>
+        </div>
+    </div>
+</body>
+</html>
+`;
+
 // New route for sending invoice via email
 router.post('/send-invoice', async (req, res) => {
 
@@ -231,13 +295,17 @@ router.get('/order-history/:id', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+// Cancel order route
 router.put('/cancel-order/:orderId', async (req, res) => {
     const orderId = req.params.orderId;
 
     try {
-        // Fetch the order from the database
+        // Fetch the order and customer email using a JOIN query
         const [order] = await db.query(
-            'SELECT * FROM orders WHERE order_id = ?',
+            `SELECT o.*, u.email
+             FROM orders o
+             JOIN users u ON o.id = u.id
+             WHERE o.order_id = ?`,
             [orderId]
         );
 
@@ -267,6 +335,23 @@ router.put('/cancel-order/:orderId', async (req, res) => {
             ['Cancelled', orderId]
         );
 
+        // Send email to the customer
+        const customerEmail = order[0].email; // Fetch email from the JOIN query result
+        const mailOptions = {
+            from: 'contact@indiangoods.co.in', // Sender email address
+            to: customerEmail, // Customer's email address
+            subject: 'Order Cancellation Confirmation', // Email subject
+            html: cancellationEmailTemplate.replace('{{orderId}}', orderId), // Replace placeholder with order ID
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email:', error);
+            } else {
+                console.log('Email sent:', info.response);
+            }
+        });
+
         // Send a success response
         res.json({ success: true, message: 'Order cancelled successfully' });
     } catch (error) {
@@ -274,6 +359,5 @@ router.put('/cancel-order/:orderId', async (req, res) => {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
-
 
 module.exports = router;
