@@ -231,6 +231,49 @@ router.get('/order-history/:id', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+router.put('/cancel-order/:orderId', async (req, res) => {
+    const orderId = req.params.orderId;
+
+    try {
+        // Fetch the order from the database
+        const [order] = await db.query(
+            'SELECT * FROM orders WHERE order_id = ?',
+            [orderId]
+        );
+
+        // Check if the order exists
+        if (order.length === 0) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+
+        const orderDate = new Date(order[0].order_date);
+        const currentTime = new Date();
+        const timeDifference = currentTime - orderDate;
+        const hoursDifference = timeDifference / (1000 * 60 * 60);
+
+        // Check if the order is within 24 hours
+        if (hoursDifference >= 24) {
+            return res.status(400).json({ success: false, message: 'Order cannot be cancelled after 24 hours' });
+        }
+
+        // Check if the order is already cancelled
+        if (order[0].order_status === 'Cancelled') {
+            return res.status(400).json({ success: false, message: 'Order is already cancelled' });
+        }
+
+        // Update the order status to "Cancelled"
+        await db.query(
+            'UPDATE orders SET order_status = ? WHERE order_id = ?',
+            ['Cancelled', orderId]
+        );
+
+        // Send a success response
+        res.json({ success: true, message: 'Order cancelled successfully' });
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
 
 
 module.exports = router;
