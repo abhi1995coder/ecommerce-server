@@ -14,7 +14,7 @@ router.use(express.urlencoded({ limit: '50mb', extended: true }));
 router.post('/', async (req, res) => {
 
 
-    const { order_id, id, total_amount, shipping_address, payment_method, items, phone } = req.body;
+    const { order_id, id, total_amount, shipping_address, payment_method, items, phone,razorpay_payment_id } = req.body;
 
     // Get a connection from the pool
     const connection = await db.getConnection();
@@ -37,8 +37,8 @@ router.post('/', async (req, res) => {
 
         // Insert into orders table
         await connection.query(
-            `INSERT INTO orders (order_id, id, total_amount, shipping_address, payment_method, phone) VALUES (?, ?, ?, ?, ?, ?)`,
-            [order_id, id, total_amount, shipping_address, payment_method, phone]
+            `INSERT INTO orders (order_id, id, total_amount, shipping_address, payment_method, phone, razorpay_payment_id) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [order_id, id, total_amount, shipping_address, payment_method, phone, razorpay_payment_id]
         );
 
         console.log("Order inserted successfully. Order ID:", order_id);
