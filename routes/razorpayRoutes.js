@@ -89,5 +89,46 @@ router.post("/verify-razorpay-payment", async (req, res) => {
     });
   }
 });
+// Route to handle Razorpay Webhooks
+router.post("/razorpay-webhook", async (req, res) => {
+  try {
+    const WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET; // Set this in .env
+    const razorpaySignature = req.headers["x-razorpay-signature"];
+    const payload = JSON.stringify(req.body);
 
+    // Verify the webhook signature
+    const expectedSignature = crypto
+      .createHmac("sha256", WEBHOOK_SECRET)
+      .update(payload)
+      .digest("hex");
+
+    if (expectedSignature !== razorpaySignature) {
+      console.error("Invalid webhook signature!");
+      return res.status(403).json({ success: false, error: "Invalid signature" });
+    }
+
+    // Handle the event (e.g., payment success, failure, etc.)
+    const event = req.body.event;
+    const paymentData = req.body.payload?.payment?.entity;
+
+    switch (event) {
+      case "payment.captured":
+        console.log("Payment successful:", paymentData);
+        break;
+      case "payment.failed":
+        console.log("Payment failed:", paymentData);
+        break;
+      case "order.paid":
+        console.log("Order paid:", paymentData);
+        break;
+      default:
+        console.log("Unhandled event:", event);
+    }
+
+    res.status(200).json({ success: true }); // Always respond with 200 OK
+  } catch (error) {
+    console.error("Webhook error:", error);
+    res.status(500).json({ success: false, error: "Webhook processing failed" });
+  }
+});
 module.exports = router;
