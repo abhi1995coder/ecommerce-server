@@ -108,7 +108,7 @@ async function sendVerificationEmail(email, verificationLink) {
             secure: true,
             auth: {
                 user: process.env.EMAIL_USER,
-                pass: procees.env.EMAIL_PASS,
+                pass: process.env.EMAIL_PASS,
             },
             tls: {
                 rejectUnauthorized: false, // GoDaddy requires this sometimes
