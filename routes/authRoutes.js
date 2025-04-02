@@ -116,7 +116,7 @@ async function sendVerificationEmail(email, verificationLink) {
         });
 
         let info = await transporter.sendMail({
-            from: `"indiangoods.co.in" <${env.EMAIL_USER}>`,
+            from: `"indiangoods.co.in" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: " Verify Your Email Address for indiangoods.co.in",
             html: getVerificationEmailTemplate(verificationLink),
